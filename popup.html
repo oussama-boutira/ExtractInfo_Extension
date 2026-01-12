@@ -1,11 +1,339 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ExtractInfo</title>
-</head>
-<body>
-    
-</body>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        width: 380px;
+        min-height: 400px;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        color: #e8e8e8;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .header h1 {
+        font-size: 24px;
+        font-weight: 600;
+        background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 5px;
+      }
+
+      .header p {
+        font-size: 12px;
+        color: #888;
+      }
+
+      .scan-btn {
+        width: 100%;
+        padding: 15px 25px;
+        font-size: 16px;
+        font-weight: 600;
+        color: white;
+        background: linear-gradient(135deg, #00d4ff 0%, #7b2cbf 100%);
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .scan-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(123, 44, 191, 0.4);
+      }
+
+      .scan-btn:active {
+        transform: translateY(0);
+      }
+
+      .scan-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .scan-btn .icon {
+        font-size: 20px;
+      }
+
+      .section {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .section-header .icon {
+        font-size: 20px;
+      }
+
+      .section-header h2 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+      }
+
+      .section-header .count {
+        margin-left: auto;
+        background: rgba(0, 212, 255, 0.2);
+        color: #00d4ff;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .items-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 150px;
+        overflow-y: auto;
+      }
+
+      .items-list::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .items-list::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 3px;
+      }
+
+      .items-list::-webkit-scrollbar-thumb {
+        background: rgba(0, 212, 255, 0.3);
+        border-radius: 3px;
+      }
+
+      .item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .item:hover {
+        background: rgba(0, 212, 255, 0.1);
+      }
+
+      .item .text {
+        flex: 1;
+        font-size: 13px;
+        word-break: break-all;
+        color: #d0d0d0;
+      }
+
+      .item .copy-btn {
+        background: rgba(0, 212, 255, 0.15);
+        border: none;
+        border-radius: 6px;
+        padding: 6px 10px;
+        color: #00d4ff;
+        font-size: 11px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+      }
+
+      .item .copy-btn:hover {
+        background: rgba(0, 212, 255, 0.3);
+      }
+
+      .item .copy-btn.copied {
+        background: rgba(0, 255, 136, 0.2);
+        color: #00ff88;
+      }
+
+      .social-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        transition: all 0.2s ease;
+      }
+
+      .social-item:hover {
+        background: rgba(0, 212, 255, 0.1);
+      }
+
+      .social-item .platform-icon {
+        font-size: 18px;
+      }
+
+      .social-item .platform-name {
+        font-size: 11px;
+        color: #888;
+        min-width: 70px;
+      }
+
+      .social-item .url {
+        flex: 1;
+        font-size: 12px;
+        color: #00d4ff;
+        text-decoration: none;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .social-item .url:hover {
+        text-decoration: underline;
+      }
+
+      .no-data {
+        text-align: center;
+        padding: 15px;
+        color: #666;
+        font-size: 13px;
+        font-style: italic;
+      }
+
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 20px;
+      }
+
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(0, 212, 255, 0.2);
+        border-top-color: #00d4ff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .status-bar {
+        text-align: center;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 11px;
+        color: #666;
+      }
+
+      .error-message {
+        background: rgba(255, 77, 77, 0.1);
+        border: 1px solid rgba(255, 77, 77, 0.3);
+        color: #ff4d4d;
+        padding: 12px;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>🔍 ExtractInfo</h1>
+      <p>Extract contacts & social links from any page</p>
+    </div>
+
+    <button id="scanBtn" class="scan-btn">
+      <span class="icon">🚀</span>
+      <span>Scan Page</span>
+    </button>
+
+    <div id="results" class="hidden">
+      <!-- Emails Section -->
+      <div class="section">
+        <div class="section-header">
+          <span class="icon">📧</span>
+          <h2>Emails</h2>
+          <span class="count" id="emailCount">0</span>
+        </div>
+        <div id="emailsList" class="items-list">
+          <div class="no-data">No data found</div>
+        </div>
+      </div>
+
+      <!-- Phones Section -->
+      <div class="section">
+        <div class="section-header">
+          <span class="icon">📞</span>
+          <h2>Phone Numbers</h2>
+          <span class="count" id="phoneCount">0</span>
+        </div>
+        <div id="phonesList" class="items-list">
+          <div class="no-data">No data found</div>
+        </div>
+      </div>
+
+      <!-- Social Links Section -->
+      <div class="section">
+        <div class="section-header">
+          <span class="icon">🌐</span>
+          <h2>Social Media</h2>
+          <span class="count" id="socialCount">0</span>
+        </div>
+        <div id="socialsList" class="items-list">
+          <div class="no-data">No data found</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+      <span>Scanning page...</span>
+    </div>
+
+    <div id="error" class="error-message hidden"></div>
+
+    <div id="statusBar" class="status-bar hidden">
+      <span id="pageInfo"></span>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
 </html>
