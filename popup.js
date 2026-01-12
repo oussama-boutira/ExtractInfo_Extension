@@ -19,6 +19,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const phoneCount = document.getElementById("phoneCount");
   const socialCount = document.getElementById("socialCount");
 
+  // SVG icons for buttons
+  const searchIcon =
+    '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>';
+  const refreshIcon =
+    '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>';
+  const loadingIcon =
+    '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>';
+
   /**
    * Show loading state
    */
@@ -28,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     errorDiv.classList.add("hidden");
     statusBar.classList.add("hidden");
     scanBtn.disabled = true;
-    scanBtn.innerHTML = '<span class="icon">⏳</span><span>Scanning...</span>';
+    scanBtn.innerHTML = loadingIcon + "<span>Scanning...</span>";
   }
 
   /**
@@ -37,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function hideLoading() {
     loadingDiv.classList.add("hidden");
     scanBtn.disabled = false;
-    scanBtn.innerHTML = '<span class="icon">🔄</span><span>Scan Again</span>';
+    scanBtn.innerHTML = refreshIcon + "<span>Scan Again</span>";
   }
 
   /**
@@ -100,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const iconSpan = document.createElement("span");
     iconSpan.className = "platform-icon";
-    iconSpan.textContent = social.icon;
+    iconSpan.innerHTML = social.icon;
 
     const nameSpan = document.createElement("span");
     nameSpan.className = "platform-name";
